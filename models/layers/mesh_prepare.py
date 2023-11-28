@@ -307,16 +307,29 @@ def set_edge_lengths(mesh, edge_points=None):
     mesh.edge_lengths = edge_lengths
 
 
+def coordinate_feature(mesh, edge_points):
+    c1 = (mesh.vs[edge_points[:, 0]] + mesh.vs[edge_points[:, 1]])/2
+    c2 = (mesh.vs[edge_points[:, 0]] + mesh.vs[edge_points[:, 2]])/2
+    c3 = (mesh.vs[edge_points[:, 0]] + mesh.vs[edge_points[:, 3]])/2
+    c4 = (mesh.vs[edge_points[:, 1]] + mesh.vs[edge_points[:, 2]])/2
+    c5 = (mesh.vs[edge_points[:, 1]] + mesh.vs[edge_points[:, 3]])/2
+    print(type(c1))
+    print(c1)
+    return None
+
+
 def extract_features(mesh):
     features = []
     edge_points = get_edge_points(mesh)
     set_edge_lengths(mesh, edge_points)
     with np.errstate(divide='raise'):
         try:
-            for extractor in [dihedral_angle, symmetric_opposite_angles, symmetric_ratios]:
-                feature = extractor(mesh, edge_points)
-                features.append(feature)
-            return np.concatenate(features, axis=0)
+            # for extractor in [dihedral_angle, symmetric_opposite_angles, symmetric_ratios]:
+            #     feature = extractor(mesh, edge_points)
+            #     features.append(feature)
+            # return np.concatenate(features, axis=0)
+            feature = coordinate_feature(mesh, edge_points)
+            return feature
         except Exception as e:
             print(e)
             raise ValueError(mesh.filename, 'bad features')
