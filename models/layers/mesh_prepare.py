@@ -313,9 +313,15 @@ def coordinate_feature(mesh, edge_points):
     c3 = (mesh.vs[edge_points[:, 0]] + mesh.vs[edge_points[:, 3]])/2
     c4 = (mesh.vs[edge_points[:, 1]] + mesh.vs[edge_points[:, 2]])/2
     c5 = (mesh.vs[edge_points[:, 1]] + mesh.vs[edge_points[:, 3]])/2
-    print(type(c1))
-    print(c1)
-    return None
+    
+    c1 = c1.max(axis=1)
+    c2 = c2.max(axis=1)
+    c3 = c3.max(axis=1)
+    c4 = c4.max(axis=1)
+    c5 = c5.max(axis=1)
+    
+    combined_array = np.stack([c1, c2, c3, c4, c5])
+    return combined_array
 
 
 def extract_features(mesh):
@@ -326,13 +332,22 @@ def extract_features(mesh):
         try:
             # for extractor in [dihedral_angle, symmetric_opposite_angles, symmetric_ratios]:
             #     feature = extractor(mesh, edge_points)
+            #     # print('feature shape')
+            #     # print(feature.shape)
             #     features.append(feature)
-            # return np.concatenate(features, axis=0)
+            
+            #print(features.shape)
+            # print('final shaoe')
+            # print(np.concatenate(features, axis=0).shape)
+            #return np.concatenate(features, axis=0)
             feature = coordinate_feature(mesh, edge_points)
+            print('features shape')
+            print(feature.shape)
             return feature
         except Exception as e:
             print(e)
             raise ValueError(mesh.filename, 'bad features')
+
 
 
 def dihedral_angle(mesh, edge_points):
